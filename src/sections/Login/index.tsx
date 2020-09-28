@@ -1,8 +1,14 @@
 import React, { useRef, useEffect } from "react";
-import { Card, Layout, Typography } from "antd";
+import { Card, Layout, Typography, Spin } from "antd";
 import googleLogo from "./assets/google_logo.jpg";
 import { Viewer } from "../../lib/types";
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
+import { Redirect } from "react-router-dom";
+import { ErrorBanner } from "../../lib/components";
+import {
+  displaySuccessNotification,
+  displayErrorMessage,
+} from "../../lib/utils";
 
 import { LOG_IN } from "../../lib/graphql/mutations";
 import { AUTH_URL } from "../../lib/graphql/queries";
@@ -21,16 +27,17 @@ interface Props {
 
 export const Login = ({ setViewer }: Props) => {
   const client = useApolloClient();
-  const [logIn, { data: logInData }] = useMutation<LogInData, LogInVariables>(
-    LOG_IN,
-    {
-      onCompleted: (data) => {
-        if (data && data.logIn) {
-          setViewer(data.logIn);
-        }
-      },
-    }
-  );
+  const [
+    logIn,
+    { data: logInData, loading: logInLoading, error: logInError },
+  ] = useMutation<LogInData, LogInVariables>(LOG_IN, {
+    onCompleted: (data) => {
+      if (data && data.logIn) {
+        setViewer(data.logIn);
+        displaySuccessNotification("You've successfully logged in!");
+      }
+    },
+  });
   const logInRef = useRef(logIn);
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
@@ -42,17 +49,39 @@ export const Login = ({ setViewer }: Props) => {
       });
     }
   }, []);
+
   const handleAuthorize = async () => {
     try {
       const { data } = await client.query<AuthUrlData>({
         query: AUTH_URL,
       });
       window.location.href = data.authUrl;
-    } catch {}
+      // http://localhost:3000/login?code=4%2F4gH7A94gVv2guhqOY5lyvUu9rRrP52BqyN1EMVMr4D85QfHjSRi5PoCKZZrVjLc9hWAgZwGw5PkDLrsm2_U7eto&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=consent#
+    } catch {
+      displayErrorMessage(
+        "Sorry! We weren't able to log you in. Please try again later!"
+      );
+    }
   };
+  if (logInLoading) {
+    return (
+      <Content className="log-in">
+        <Spin size="large" tip="Logging you in..." />
+      </Content>
+    );
+  }
+
+  if (logInData && logInData.logIn) {
+    const { id: viewerId } = logInData.logIn;
+    return <Redirect to={`/user/${viewerId}`} />;
+  }
+  const logInErrorBannerElement = logInError ? (
+    <ErrorBanner description="Sorry! We weren't able to log you in. Please try again later!" />
+  ) : null;
 
   return (
     <Content className="log-in">
+      {logInErrorBannerElement}
       <Card className="log-in-card">
         <div className="log-in-card__intro">
           <Title level={3} className="log-in-card__intro-title">
