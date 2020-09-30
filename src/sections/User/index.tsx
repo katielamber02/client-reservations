@@ -1,6 +1,8 @@
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
-import { USER } from "../../lib/graphql/queries/User";
+
+import { USER } from ".././../lib/graphql/queries";
+
 import {
   User as UserData,
   UserVariables,
