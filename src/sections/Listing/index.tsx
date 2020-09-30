@@ -9,7 +9,7 @@ import {
 import { RouteComponentProps } from "react-router-dom";
 import { PageSkeleton, ErrorBanner } from "../../lib/components";
 import { Col, Layout, Row } from "antd";
-import { ListingDetails } from "./components";
+import { ListingDetails, ListingReservations } from "./components";
 
 const PAGE_LIMIT = 3;
 const { Content } = Layout;
@@ -38,8 +38,18 @@ export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
   }
   const listing = data ? data.listing : null;
   const listingReservations = listing ? listing.reservations : null;
+
   const listingDetailsElement = listing ? (
     <ListingDetails listing={listing} />
+  ) : null;
+
+  const listingReservationsElement = listingReservations ? (
+    <ListingReservations
+      listingReservations={listingReservations}
+      reservationsPage={reservationsPage}
+      limit={PAGE_LIMIT}
+      setReservationsPage={setReservationsPage}
+    />
   ) : null;
 
   if (error) {
@@ -56,6 +66,7 @@ export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
       <Row gutter={24} justify="space-between">
         <Col xs={24} lg={14}>
           {listingDetailsElement}
+          {listingReservationsElement}
         </Col>
       </Row>
     </Content>
