@@ -22,7 +22,7 @@ export const User = ({ match }: RouteComponentProps<MatchParams>) => {
     },
   });
   const user = data ? data.user : null;
-  const userProfileElement = user ? <UserProfile /> : null;
+  const userProfileElement = user ? <UserProfile user={user} /> : null;
 
   return (
     <Content className="user">
