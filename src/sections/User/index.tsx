@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 
 import { USER } from ".././../lib/graphql/queries";
@@ -10,7 +10,7 @@ import {
 } from "../../lib/graphql/queries/User/__generated__/User";
 import { RouteComponentProps } from "react-router-dom";
 import { Col, Layout, Row } from "antd";
-import { UserProfile } from "./components";
+import { UserProfile, UserListings, UserReservations } from "./components";
 import { PageSkeleton, ErrorBanner } from "../../lib/components";
 
 interface MatchParams {
@@ -21,13 +21,21 @@ interface Props {
 }
 const { Content } = Layout;
 
+const PAGE_LIMIT = 4;
+
 export const User = ({
   viewer,
   match,
 }: Props & RouteComponentProps<MatchParams>) => {
+  const [listingsPage, setListingsPage] = useState(1);
+  const [reservationsPage, setReservationsPage] = useState(1);
+
   const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
     variables: {
       id: match.params.id,
+      reservationsPage,
+      listingsPage,
+      limit: PAGE_LIMIT,
     },
   });
   if (loading) {
@@ -47,15 +55,39 @@ export const User = ({
     );
   }
   const user = data ? data.user : null;
+  const userListings = user ? user.listings : null;
+  const userReservations = user ? user.reservations : null;
+
   const viewerIsUser = viewer.id === match.params.id;
+
   const userProfileElement = user ? (
     <UserProfile user={user} viewerIsUser={viewerIsUser} />
+  ) : null;
+
+  const userListingsElement = userListings ? (
+    <UserListings
+      userListings={userListings}
+      listingsPage={listingsPage}
+      limit={PAGE_LIMIT}
+      setListingsPage={setListingsPage}
+    />
+  ) : null;
+
+  const userReservationsElement = userListings ? (
+    <UserReservations
+      userReservations={userReservations}
+      reservationsPage={reservationsPage}
+      limit={PAGE_LIMIT}
+      setReservationsPage={setReservationsPage}
+    />
   ) : null;
 
   return (
     <Content className="user">
       <Row gutter={12} justify="space-between">
         <Col xs={24}>{userProfileElement}</Col>
+        <Col xs={24}>{userListingsElement}</Col>
+        <Col xs={24}>{userReservationsElement}</Col>
       </Row>
     </Content>
   );
