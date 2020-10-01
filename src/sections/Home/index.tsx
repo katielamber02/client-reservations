@@ -6,11 +6,33 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import { displayErrorMessage } from "../../lib/utils";
 import sanFransiscoImage from "./assets/san-francisco.jpg";
 import cancunImage from "./assets/cancun.jpg";
+import { useQuery } from "@apollo/react-hooks";
+import {
+  Listings as ListingsData,
+  ListingsVariables,
+} from "../../lib/graphql/queries/Listings/__generated__/Listings";
+import { ListingsFilter } from "../../lib/graphql/globalTypes";
+import { LISTINGS } from "../../lib/graphql/queries/Listings";
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
+const PAGE_LIMIT = 4;
+const PAGE_NUMBER = 1;
+
 export const Home = ({ history }: RouteComponentProps) => {
+  const { loading, data } = useQuery<ListingsData, ListingsVariables>(
+    LISTINGS,
+    {
+      variables: {
+        filter: ListingsFilter.PRICE_HIGH_TO_LOW,
+        limit: PAGE_LIMIT,
+        page: PAGE_NUMBER,
+      },
+    }
+  );
+
+  console.log("istings data", data);
   const onSearch = (value: string) => {
     const trimmedValue = value.trim();
 

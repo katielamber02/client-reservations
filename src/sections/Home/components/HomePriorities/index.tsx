@@ -13,6 +13,9 @@ interface Props {
 }
 const { Search } = Input;
 
+const PAGE_LIMIT = 4;
+const PAGE_NUMBER = 1;
+
 export const HomePriorities = ({ onSearch }: Props) => {
   return (
     <div className="home-hero">
