@@ -1,5 +1,6 @@
 import React from "react";
+import { HomePriorities } from "./components/HomePriorities";
 
 export const Home = () => {
-  return <h2>Home</h2>;
+  return <HomePriorities />;
 };
