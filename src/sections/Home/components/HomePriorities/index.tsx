@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, Col, Row, Typography } from "antd";
-
+import { Card, Col, Input, Row, Typography } from "antd";
 import torontoImage from "../../assets/toronto.jpg";
 import dubaiImage from "../../assets/dubai.jpg";
 import losAngelesImage from "../../assets/los-angeles.jpg";
@@ -9,13 +8,25 @@ import londonImage from "../../assets/london.jpeg";
 
 const { Title } = Typography;
 
-export const HomePriorities = () => {
+interface Props {
+  onSearch: (value: string) => void;
+}
+const { Search } = Input;
+
+export const HomePriorities = ({ onSearch }: Props) => {
   return (
     <div className="home-hero">
       <div className="home-hero__search">
         <Title className="home-hero__title">
           Find a place you'll love to stay at
         </Title>
+        <Search
+          placeholder="Search 'San Fransisco'"
+          size="large"
+          enterButton
+          className="home-hero__search-input"
+          onSearch={onSearch}
+        />
       </div>
       <Row gutter={12} className="home-hero__cards">
         <Col xs={12} md={6}>
