@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import { Layout, List, Typography } from "antd";
+import { Layout, List, Typography, Affix } from "antd";
 import { ListingCard } from "../../lib/components";
 import { LISTINGS } from "../../lib/graphql/queries";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { RouteComponentProps, Link } from "react-router-dom";
+import { ListingsFilters } from "./components";
 
 interface MatchParams {
   location: string;
@@ -39,6 +40,9 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
   const listingsSectionElement =
     listings && listings.result.length ? (
       <div>
+        <Affix offsetTop={64}>
+          <ListingsFilters filter={filter} setFilter={setFilter} />
+        </Affix>
         <List
           grid={{
             gutter: 8,
