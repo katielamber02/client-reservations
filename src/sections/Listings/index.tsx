@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { Layout, List, Typography, Affix } from "antd";
 import { ListingCard } from "../../lib/components";
@@ -9,7 +9,7 @@ import {
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { RouteComponentProps, Link } from "react-router-dom";
-import { ListingsFilters } from "./components";
+import { ListingsFilters, ListingsPagination } from "./components";
 
 interface MatchParams {
   location: string;
@@ -18,7 +18,7 @@ interface MatchParams {
 const { Content } = Layout;
 const { Paragraph, Text, Title } = Typography;
 
-const PAGE_LIMIT = 8;
+const PAGE_LIMIT = 2;
 
 export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
   const [filter, setFilter] = useState(ListingsFilter.PRICE_LOW_TO_HIGH);
@@ -41,8 +41,17 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
     listings && listings.result.length ? (
       <div>
         <Affix offsetTop={64}>
+          <ListingsPagination
+            total={listings.total}
+            page={page}
+            limit={PAGE_LIMIT}
+            setPage={setPage}
+          />
+        </Affix>
+        <Affix offsetTop={64}>
           <ListingsFilters filter={filter} setFilter={setFilter} />
         </Affix>
+
         <List
           grid={{
             gutter: 8,
