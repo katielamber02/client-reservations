@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, Fragment } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { Layout, List, Typography, Affix } from "antd";
-import { ListingCard } from "../../lib/components";
+import { ListingCard, ErrorBanner } from "../../lib/components";
 import { LISTINGS } from "../../lib/graphql/queries";
 import {
   Listings as ListingsData,
@@ -9,7 +9,11 @@ import {
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { RouteComponentProps, Link } from "react-router-dom";
-import { ListingsFilters, ListingsPagination } from "./components";
+import {
+  ListingsFilters,
+  ListingsPagination,
+  ListingsSkeleton,
+} from "./components";
 
 interface MatchParams {
   location: string;
@@ -21,6 +25,7 @@ const { Paragraph, Text, Title } = Typography;
 const PAGE_LIMIT = 2;
 
 export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
+  const locationRef = useRef(match.params.location);
   const [filter, setFilter] = useState(ListingsFilter.PRICE_LOW_TO_HIGH);
   const [page, setPage] = useState(1);
 
@@ -35,6 +40,26 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
       },
     }
   );
+  useEffect(() => {
+    setPage(1);
+    locationRef.current = match.params.location;
+  }, [match.params.location]);
+  if (loading) {
+    return (
+      <Content className="listings">
+        <ListingsSkeleton />
+      </Content>
+    );
+  }
+
+  if (error) {
+    return (
+      <Content className="listings">
+        <ErrorBanner description="We either couldn't find anything matching your search or have encountered an error. If you're searching for a unique location, try searching again with more common keywords." />
+        <ListingsSkeleton />
+      </Content>
+    );
+  }
   const listings = data ? data.listings : null;
   const listingsRegion = listings ? listings.region : null;
   const listingsSectionElement =
