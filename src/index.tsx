@@ -96,11 +96,12 @@ const App = () => {
           />
           <Route exact path="/host" component={Host} />
           <Route exact path="/listing/:id" component={Listing} />
-          {/* <Route exact path="/listings/:location?" component={Listings} /> */}
-          <Route
+          <Route exact path="/listings/:location?" component={Listings} />
+
+          {/* <Route
             path="/listings"
             render={(props) => <Listings {...props} title="Hello" />}
-          />
+          /> */}
           {/* <Route exact path="/user/:id" component={User} /> */}
           <Route
             exact
