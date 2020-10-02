@@ -8,6 +8,7 @@ import {
   ListingsVariables,
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
+import { RouteComponentProps } from "react-router-dom";
 
 interface MatchParams {
   location: string;
@@ -18,7 +19,7 @@ const { Paragraph, Text, Title } = Typography;
 
 const PAGE_LIMIT = 8;
 
-export const Listings = () => {
+export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
   const [filter, setFilter] = useState(ListingsFilter.PRICE_LOW_TO_HIGH);
   const [page, setPage] = useState(1);
 
@@ -26,6 +27,7 @@ export const Listings = () => {
     LISTINGS,
     {
       variables: {
+        location: match.params.location,
         filter,
         limit: PAGE_LIMIT,
         page,
@@ -62,6 +64,7 @@ export const Listings = () => {
 
 // import React from "react";
 // import { server } from "../../lib/api";
+// import { RouteComponentProps } from "react-router-dom";
 
 // const LISTINGS = `
 // query Listings{
