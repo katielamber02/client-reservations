@@ -8,7 +8,7 @@ import {
   ListingsVariables,
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 
 interface MatchParams {
   location: string;
@@ -35,6 +35,7 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
     }
   );
   const listings = data ? data.listings : null;
+  const listingsRegion = listings ? listings.region : null;
   const listingsSectionElement =
     listings && listings.result.length ? (
       <div>
@@ -53,10 +54,28 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
           )}
         />
       </div>
-    ) : null;
+    ) : (
+      <div>
+        <Paragraph>
+          It appears that no listings have yet been created for{" "}
+          <Text mark>"{listingsRegion}"</Text>
+        </Paragraph>
+        <Paragraph>
+          Be the first person to create a{" "}
+          <Link to="/host">listing in this area</Link>!
+        </Paragraph>
+      </div>
+    );
   console.log("Listings data:", data);
+
+  const listingsRegionElement = listingsRegion ? (
+    <Title level={3} className="listings__title">
+      Results for "{listingsRegion}"
+    </Title>
+  ) : null;
   return (
     <Content className="listings">
+      {listingsRegionElement}
       Listings to show:{listingsSectionElement}
     </Content>
   );
