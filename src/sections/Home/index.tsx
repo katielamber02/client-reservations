@@ -1,5 +1,9 @@
 import React from "react";
-import { HomePriorities } from "./components/HomePriorities";
+import {
+  HomePriorities,
+  HomeListingsSkeleton,
+  HomeListings,
+} from "./components";
 import { Layout, Typography, Col, Row } from "antd";
 import mapBackground from "./assets/map-background.jpg";
 import { RouteComponentProps, Link } from "react-router-dom";
@@ -42,6 +46,22 @@ export const Home = ({ history }: RouteComponentProps) => {
       displayErrorMessage("Please enter a valid search!");
     }
   };
+  const renderListingsSection = () => {
+    if (loading) {
+      return <HomeListingsSkeleton />;
+    }
+
+    if (data) {
+      return (
+        <HomeListings
+          title="Premium Listings"
+          listings={data.listings.result}
+        />
+      );
+    }
+
+    return null;
+  };
   return (
     <Content
       className="home"
@@ -63,6 +83,7 @@ export const Home = ({ history }: RouteComponentProps) => {
           Popular listings in the United States
         </Link>
       </div>
+      {renderListingsSection()}
       <div className="home__listings">
         <Title level={4} className="home__listings-title">
           Listings of any kind
