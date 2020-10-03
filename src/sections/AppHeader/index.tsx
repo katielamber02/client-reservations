@@ -15,8 +15,6 @@ interface Props {
 const { Header } = Layout;
 const { Search } = Input;
 
-// export const AppHeader = ({ viewer, setViewer }: Props) => {
-
 export const AppHeader = withRouter(
   ({ viewer, setViewer, location, history }: Props & RouteComponentProps) => {
     const [search, setSearch] = useState("");
