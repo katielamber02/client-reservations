@@ -18,6 +18,7 @@ interface MatchParams {
 }
 interface Props {
   viewer: Viewer;
+  setViewer: (viewer: Viewer) => void;
 }
 const { Content } = Layout;
 
@@ -25,19 +26,26 @@ const PAGE_LIMIT = 4;
 
 export const User = ({
   viewer,
+  setViewer,
   match,
 }: Props & RouteComponentProps<MatchParams>) => {
   const [listingsPage, setListingsPage] = useState(1);
   const [reservationsPage, setReservationsPage] = useState(1);
 
-  const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
-    variables: {
-      id: match.params.id,
-      reservationsPage,
-      listingsPage,
-      limit: PAGE_LIMIT,
-    },
-  });
+  const { data, loading, error, refetch } = useQuery<UserData, UserVariables>(
+    USER,
+    {
+      variables: {
+        id: match.params.id,
+        reservationsPage,
+        listingsPage,
+        limit: PAGE_LIMIT,
+      },
+    }
+  );
+  const handleUserRefetch = async () => {
+    await refetch();
+  };
   if (loading) {
     return (
       <Content className="user">
@@ -61,7 +69,13 @@ export const User = ({
   const viewerIsUser = viewer.id === match.params.id;
 
   const userProfileElement = user ? (
-    <UserProfile user={user} viewerIsUser={viewerIsUser} />
+    <UserProfile
+      user={user}
+      viewerIsUser={viewerIsUser}
+      setViewer={setViewer}
+      viewer={viewer}
+      handleUserRefetch={handleUserRefetch}
+    />
   ) : null;
 
   const userListingsElement = userListings ? (
