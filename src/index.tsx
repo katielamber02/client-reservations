@@ -60,7 +60,7 @@ const App = () => {
     },
   });
   console.log("[Viewer]:", viewer);
-  // [Viewer]: {id: "100360416195713761162", token: "aafdcceec3228660c6104f7543c3310e", avatar: "https://lh4.googleusercontent.com/-FPNUiswLGzg/AAA…AMZuucnILtd9TO8j5QXB3fdvPEJQ52YrJw/s100/photo.jpg", hasWallet: null, didRequest: true, …}
+  // [Viewer]: {id: "100360416195713761162", token: "aafdcceec3228660c6104f7543c3310e", avatar: "https://lh4.googleusercontent.com/-FPNUiswLGzg/AAA…AMZuucnILtd9TO8j5QXB3fdvPEJQ52YrJw/s100/photo.jpg", hasWallet: null, didRequest: true, …}
 
   const logInRef = useRef(logIn);
 

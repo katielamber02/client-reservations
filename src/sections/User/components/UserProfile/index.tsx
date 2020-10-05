@@ -1,6 +1,11 @@
 import React, { Fragment } from "react";
 import { User as UserData } from "../../../../lib/graphql/queries/User/__generated__/User";
-import { Avatar, Button, Card, Divider, Typography } from "antd";
+import { Avatar, Button, Card, Divider, Typography, Tag } from "antd";
+import {
+  formatListingPrice,
+  displaySuccessNotification,
+  displayErrorMessage,
+} from "../../../../lib/utils";
 
 // interface Props {
 //   user: any;
@@ -22,35 +27,58 @@ export const UserProfile = ({ user, viewerIsUser }: Props) => {
     window.location.href = stripeAuthUrl;
   };
 
-  const additionalDetailsSection = viewerIsUser ? (
+  const additionalDetails = user.hasWallet ? (
     <Fragment>
-      <Divider />
-      <div className="user-profile__details">
-        <Title level={4}>Additional Details</Title>
-        <Paragraph>
-          Interested in becoming a host? Register with your Stripe account!
-        </Paragraph>
-        <Button
-          type="primary"
-          className="user-profile__details-cta"
-          onClick={redirectToStripe}
-        >
-          Connect with Stripe
-        </Button>
-        <Paragraph type="secondary">
-          Application uses{" "}
-          <a
-            href="https://stripe.com/en-US/connect"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Stripe
-          </a>{" "}
-          to help transfer your earnings in a secure and truster manner.
-        </Paragraph>
-      </div>
+      <Paragraph>
+        <Tag color="green">Stripe Registered</Tag>
+      </Paragraph>
+      <Paragraph>
+        Income Earned:{" "}
+        <Text strong>
+          {user.income ? formatListingPrice(user.income) : `$0`}
+        </Text>
+      </Paragraph>
+      <Button
+        type="primary"
+        className="user-profile__details-cta"
+        // loading={loading}
+        // onClick={() => disconnectStripe()}
+      >
+        Disconnect Stripe
+      </Button>
+      <Paragraph type="secondary">
+        By disconnecting, you won't be able to receive{" "}
+        <Text strong>any further payments</Text>. This will prevent users from
+        booking listings that you might have already created.
+      </Paragraph>
     </Fragment>
-  ) : null;
+  ) : (
+    <Fragment>
+      <Paragraph>
+        Interested in becoming a TinyHouse host? Register with your Stripe
+        account!
+      </Paragraph>
+      <Button
+        type="primary"
+        className="user-profile__details-cta"
+        onClick={redirectToStripe}
+      >
+        Connect with Stripe
+      </Button>
+      <Paragraph type="secondary">
+        TinyHouse uses{" "}
+        <a
+          href="https://stripe.com/en-US/connect"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Stripe
+        </a>{" "}
+        to help transfer your earnings in a secure and truster manner.
+      </Paragraph>
+    </Fragment>
+  );
+
   return (
     <div className="user-profile">
       <Card className="user-profile__card">
@@ -67,7 +95,7 @@ export const UserProfile = ({ user, viewerIsUser }: Props) => {
             Contact: <Text strong>{user.contact}</Text>
           </Paragraph>
         </div>
-        {additionalDetailsSection}
+        {additionalDetails}
       </Card>
     </div>
   );

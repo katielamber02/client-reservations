@@ -53,7 +53,7 @@ export const Stripe = ({
   }, [history]);
 
   if (data && data.connectStripe) {
-    // return <Redirect to={`/user/${viewer.id}`} />;
+    return <Redirect to={`/user/${viewer.id}`}></Redirect>;
   }
 
   if (loading) {
