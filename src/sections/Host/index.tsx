@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {
   Layout,
   Typography,
@@ -22,8 +22,14 @@ import {
   displaySuccessNotification,
   displayErrorMessage,
 } from "../../lib/utils";
-
 import { UploadChangeParam } from "antd/lib/upload";
+import { HOST_LISTING } from "../../lib/graphql/mutations";
+
+import {
+  HostListing as HostListingData,
+  HostListingVariables,
+} from "../../lib/graphql/mutations/HostListing/__generated__/HostListing";
+import { useMutation } from "@apollo/react-hooks";
 
 const { Content } = Layout;
 const { Text, Title } = Typography;
@@ -67,6 +73,20 @@ export const Host = ({ viewer }: Props) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageBase64Value, setImageBase64Value] = useState<string | null>(null);
 
+  const [hostListing, { loading, data }] = useMutation<
+    HostListingData,
+    HostListingVariables
+  >(HOST_LISTING, {
+    onCompleted: () => {
+      displaySuccessNotification("You've successfully created your listing!");
+    },
+    onError: () => {
+      displayErrorMessage(
+        "Sorry! We weren't able to create your listing. Please try again later."
+      );
+    },
+  });
+
   const handleImageUpload = (info: UploadChangeParam) => {
     const { file } = info;
 
@@ -101,9 +121,48 @@ export const Host = ({ viewer }: Props) => {
       </Content>
     );
   }
+  if (loading) {
+    return (
+      <Content className="host-content">
+        <div className="host__form-header">
+          <Title level={3} className="host__form-title">
+            Please wait!
+          </Title>
+          <Text type="secondary">We're creating your listing now.</Text>
+        </div>
+      </Content>
+    );
+  }
+
+  if (data && data.hostListing) {
+    return <Redirect to={`/listing/${data.hostListing.id}`} />;
+  }
+
+  const onFinish = (values: any) => {
+    console.log("Received values of form: ", values);
+
+    const fullAddress = `${values.address}, ${values.city}, ${values.state}, ${values.postalCode}`;
+
+    const input = {
+      ...values,
+      address: fullAddress,
+      image: imageBase64Value,
+      price: values.price * 100,
+    };
+    delete input.city;
+    delete input.state;
+    delete input.postalCode;
+
+    hostListing({
+      variables: {
+        input,
+      },
+    });
+  };
+
   return (
     <Content className="host-content">
-      <Form layout="vertical">
+      <Form layout="vertical" onFinish={onFinish}>
         <div className="host__form-header">
           <Title level={3} className="host__form-title">
             Hi! Let's get started listing your place.
@@ -216,16 +275,16 @@ export const Host = ({ viewer }: Props) => {
           rules={[
             {
               required: true,
-              message: "Please enter a state or province for your listing",
+              message: "Please enter a state (or province) for your listing!",
             },
           ]}
         >
-          <Input placeholder="California" />
+          <Input placeholder="Los Angeles" />
         </Item>
 
         <Item
           label="Zip/Postal Code"
-          name="zip"
+          name="postalCode"
           rules={[
             {
               required: true,
@@ -251,7 +310,7 @@ export const Host = ({ viewer }: Props) => {
             <Upload
               name="image"
               listType="picture-card"
-              showUploadList={true}
+              showUploadList={false}
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeImageUpload}
               onChange={handleImageUpload}

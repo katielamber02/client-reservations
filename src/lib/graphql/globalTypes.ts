@@ -23,7 +23,7 @@ export interface ConnectStripeInput {
 
 export interface HostListingInput {
   title: string;
-  descripttion: string;
+  description: string;
   image: string;
   type: ListingType;
   address: string;

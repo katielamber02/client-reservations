@@ -497,7 +497,7 @@
             "defaultValue": null
           },
           {
-            "name": "descripttion",
+            "name": "description",
             "description": null,
             "type": {
               "kind": "NON_NULL",
