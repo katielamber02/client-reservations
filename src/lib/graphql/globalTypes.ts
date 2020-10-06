@@ -21,6 +21,16 @@ export interface ConnectStripeInput {
   code: string;
 }
 
+export interface HostListingInput {
+  title: string;
+  descripttion: string;
+  image: string;
+  type: ListingType;
+  address: string;
+  guests: number;
+  price: number;
+}
+
 export interface LogInInput {
   code: string;
 }

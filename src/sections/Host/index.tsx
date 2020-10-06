@@ -8,6 +8,7 @@ import {
   InputNumber,
   Radio,
   Upload,
+  Button,
 } from "antd";
 import { Viewer } from "../../lib/types";
 import { ListingType } from "../../lib/graphql/globalTypes";
@@ -113,7 +114,16 @@ export const Host = ({ viewer }: Props) => {
           </Text>
         </div>
 
-        <Item label="Home Type">
+        <Item
+          label="Home Type"
+          name="type"
+          rules={[
+            {
+              required: true,
+              message: "Please select a home type",
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio.Button value={ListingType.APARTMENT}>
               <BankOutlined translate="true" />
@@ -126,14 +136,47 @@ export const Host = ({ viewer }: Props) => {
           </Radio.Group>
         </Item>
 
-        <Item label="Title" extra="Max character count of 45">
+        <Item
+          label="Max # of Guests"
+          name="guests"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a max number of guests!",
+            },
+          ]}
+        >
+          <InputNumber min={1} placeholder="4" />
+        </Item>
+
+        <Item
+          label="Title"
+          extra="Max character count of 45"
+          name="title"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a title for your listing",
+            },
+          ]}
+        >
           <Input
             maxLength={45}
             placeholder="The iconic and luxurious Bel-Air mension"
           />
         </Item>
 
-        <Item label="Description of listing" extra="Max character count of 400">
+        <Item
+          label="Description of listing"
+          extra="Max character count of 400"
+          name="description"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a description for your listing",
+            },
+          ]}
+        >
           <Input.TextArea
             rows={3}
             maxLength={45}
@@ -141,25 +184,68 @@ export const Host = ({ viewer }: Props) => {
           />
         </Item>
 
-        <Item label="Address">
+        <Item
+          label="Address"
+          name="address"
+          rules={[
+            {
+              required: true,
+              message: "Please enter an address for your listing",
+            },
+          ]}
+        >
           <Input placeholder="251 North Bristol Avenue" />
         </Item>
 
-        <Item label="City or Town">
+        <Item
+          label="City or Town"
+          name="city"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a city for your listing",
+            },
+          ]}
+        >
           <Input placeholder="Los Angeles" />
         </Item>
 
-        <Item label="State or province">
+        <Item
+          label="State or province"
+          name="state"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a state or province for your listing",
+            },
+          ]}
+        >
           <Input placeholder="California" />
         </Item>
 
-        <Item label="Zip/Postal Code">
+        <Item
+          label="Zip/Postal Code"
+          name="zip"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a zip/postal code for your listing",
+            },
+          ]}
+        >
           <Input placeholder="Enter a zip code for your listing" />
         </Item>
 
         <Item
           label="Image"
           extra="Images have to be under 1MB in size and of type JPG or PNG"
+          name="image"
+          rules={[
+            {
+              required: true,
+              message: "Please provide an image for your listing",
+            },
+          ]}
         >
           <div className="host__form-image-upload">
             <Upload
@@ -187,8 +273,24 @@ export const Host = ({ viewer }: Props) => {
           </div>
         </Item>
 
-        <Item label="Price" extra="All prices in $USD/day">
+        <Item
+          label="Price"
+          extra="All prices in $USD/day"
+          name="price"
+          rules={[
+            {
+              required: true,
+              message: "Please enter a price for your listing",
+            },
+          ]}
+        >
           <InputNumber min={0} placeholder="120" />
+        </Item>
+
+        <Item>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
         </Item>
       </Form>
     </Content>
