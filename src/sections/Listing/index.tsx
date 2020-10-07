@@ -12,6 +12,7 @@ import {
   ListingDetails,
   ListingReservations,
   ListingCreateReservation,
+  ListingCreateReservationModal,
 } from "./components";
 import { Moment } from "moment";
 import { Viewer } from "../../lib/types";
@@ -32,6 +33,7 @@ export const Listing = ({
   const [reservationsPage, setReservationsPage] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { loading, data, error } = useQuery<ListingData, ListingVariables>(
     LISTING,
@@ -84,8 +86,21 @@ export const Listing = ({
       checkOutDate={checkOutDate}
       setCheckInDate={setCheckInDate}
       setCheckOutDate={setCheckOutDate}
+      setModalVisible={setModalVisible}
     />
   ) : null;
+
+  const listingCreateReservationModalElement =
+    listing && checkInDate && checkOutDate ? (
+      <ListingCreateReservationModal
+        price={listing.price}
+        modalVisible={modalVisible}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        setModalVisible={setModalVisible}
+      />
+    ) : null;
+
   return (
     <Content className="listings">
       <Row gutter={24} justify="space-between">
@@ -97,6 +112,7 @@ export const Listing = ({
           {listingCreateBookingElement}
         </Col>
       </Row>
+      {listingCreateReservationModalElement}
     </Content>
   );
 };
