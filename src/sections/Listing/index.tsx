@@ -14,14 +14,21 @@ import {
   ListingCreateReservation,
 } from "./components";
 import { Moment } from "moment";
+import { Viewer } from "../../lib/types";
 
 const PAGE_LIMIT = 3;
 const { Content } = Layout;
 
+interface Props {
+  viewer: Viewer;
+}
 interface MatchParams {
   id: string;
 }
-export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
+export const Listing = ({
+  viewer,
+  match,
+}: Props & RouteComponentProps<MatchParams>) => {
   const [reservationsPage, setReservationsPage] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
@@ -69,6 +76,7 @@ export const Listing = ({ match }: RouteComponentProps<MatchParams>) => {
   }
   const listingCreateBookingElement = listing ? (
     <ListingCreateReservation
+      viewer={viewer}
       price={listing.price}
       checkInDate={checkInDate}
       checkOutDate={checkOutDate}
