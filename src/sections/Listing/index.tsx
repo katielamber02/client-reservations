@@ -79,6 +79,7 @@ export const Listing = ({
       viewer={viewer}
       host={listing.host}
       price={listing.price}
+      reservationsIndex={listing.reservationsIndex}
       checkInDate={checkInDate}
       checkOutDate={checkOutDate}
       setCheckInDate={setCheckInDate}

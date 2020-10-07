@@ -4,6 +4,7 @@ import moment, { Moment } from "moment";
 import { displayErrorMessage, formatListingPrice } from "../../../../lib/utils";
 import { Viewer } from "../../../../lib/types";
 import { Listing as ListingData } from "../../../../lib/graphql/queries/Listing/__generated__/Listing";
+import { ReservationsIndex } from "./types";
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -11,6 +12,7 @@ interface Props {
   viewer: Viewer;
   host: ListingData["listing"]["host"];
   price: number;
+  reservationsIndex: ListingData["listing"]["reservationsIndex"];
   checkInDate: Moment | null;
   checkOutDate: Moment | null;
   setCheckInDate: (checkInDate: Moment | null) => void;
@@ -21,16 +23,32 @@ export const ListingCreateReservation = ({
   viewer,
   host,
   price,
+  reservationsIndex,
   checkInDate,
   checkOutDate,
   setCheckInDate,
   setCheckOutDate,
 }: Props) => {
+  const reservationsIndexJSON: ReservationsIndex = JSON.parse(
+    reservationsIndex
+  );
+
+  const dateIsBooked = (currentDate: Moment) => {
+    const year = moment(currentDate).year();
+    const month = moment(currentDate).month();
+    const day = moment(currentDate).date();
+
+    if (reservationsIndexJSON[year] && reservationsIndexJSON[year][month]) {
+      return Boolean(reservationsIndexJSON[year][month][day]);
+    } else {
+      return false;
+    }
+  };
   const disabledDate = (currentDate?: Moment) => {
     if (currentDate) {
       const dateIsBeforeEndOfDay = currentDate.isBefore(moment().endOf("day"));
 
-      return dateIsBeforeEndOfDay;
+      return dateIsBeforeEndOfDay || dateIsBooked(currentDate);
     } else {
       return false;
     }
@@ -49,7 +67,7 @@ export const ListingCreateReservation = ({
   };
 
   const viewerIsHost = viewer.id === host.id;
-  const checkInInputDisabled = !viewer.id || viewerIsHost;
+  const checkInInputDisabled = !viewer.id || viewerIsHost || host.hasWallet;
   const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
   const buttonDisabled = !checkInDate || !checkOutDate;
 
@@ -59,6 +77,9 @@ export const ListingCreateReservation = ({
     buttonMessage = "You have to be signed in to book a listing!";
   } else if (viewerIsHost) {
     buttonMessage = "You can't book your own listing!";
+  } else if (!host.hasWallet) {
+    buttonMessage =
+      "The host has disconnected from Stripe and thus won't be able to receive payments!";
   }
 
   return (
