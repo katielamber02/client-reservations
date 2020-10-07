@@ -30,6 +30,24 @@ export const ListingCreateReservationModal = ({
   const daysBooked = checkOutDate.diff(checkInDate, "days") + 1;
   const listingPrice = price * daysBooked;
 
+  const handleCreateReservation = async () => {
+    if (!stripe) {
+      return;
+    }
+    let { token: stripeToken } = await stripe.createToken();
+    console.log(stripeToken);
+    // _ip: "", created: 1602078810, …}
+    // card: {id: "card_1HZd5CIYLzHD4CRqwRox2QPv", object: "card", address_city: null, address_country: null, address_line1: null, …}
+    // client_ip: ""
+    // created: 1602078810
+    // id: "tok_1HZd5CIYLzHD4CRqqFJr0npc"
+    // livemode: false
+    // object: "token"
+    // type: "card"
+    // used: false
+    // __proto__: Object
+  };
+
   return (
     <Modal
       visible={modalVisible}
@@ -77,15 +95,15 @@ export const ListingCreateReservationModal = ({
           <CardElement
             hidePostalCode
             className="listing-booking-modal__stripe-card"
+          />
+          <Button
+            size="large"
+            type="primary"
+            className="listing-booking-modal__cta"
+            onClick={handleCreateReservation}
           >
-            <Button
-              size="large"
-              type="primary"
-              className="listing-booking-modal__cta"
-            >
-              Book
-            </Button>
-          </CardElement>
+            Book
+          </Button>
         </div>
       </div>
     </Modal>
