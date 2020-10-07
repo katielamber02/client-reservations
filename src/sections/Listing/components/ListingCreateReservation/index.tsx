@@ -88,7 +88,8 @@ export const ListingCreateReservation = ({
   };
 
   const viewerIsHost = viewer.id === host.id;
-  const checkInInputDisabled = !viewer.id || viewerIsHost || host.hasWallet;
+  // const checkInInputDisabled = !viewer.id || viewerIsHost || host.hasWallet; // TO UNCOMMENT
+  const checkInInputDisabled = !viewer.id;
   const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
   const buttonDisabled = !checkInDate || !checkOutDate;
 

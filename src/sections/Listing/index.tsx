@@ -12,7 +12,7 @@ import {
   ListingDetails,
   ListingReservations,
   ListingCreateReservation,
-  ListingCreateReservationModal,
+  WrappedListingCreateReservationModal as ListingCreateReservationModal,
 } from "./components";
 import { Moment } from "moment";
 import { Viewer } from "../../lib/types";
