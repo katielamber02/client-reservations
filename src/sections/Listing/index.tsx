@@ -31,20 +31,35 @@ export const Listing = ({
   match,
 }: Props & RouteComponentProps<MatchParams>) => {
   const [reservationsPage, setReservationsPage] = useState(1);
-  const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
-  const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
+  const [checkInDate, setCheckInDate] = useState<Moment | null | undefined>(
+    null
+  );
+  const [checkOutDate, setCheckOutDate] = useState<Moment | null | undefined>(
+    null
+  );
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { loading, data, error } = useQuery<ListingData, ListingVariables>(
-    LISTING,
-    {
-      variables: {
-        id: match.params.id,
-        reservationsPage,
-        limit: PAGE_LIMIT,
-      },
-    }
-  );
+  const { loading, data, error, refetch } = useQuery<
+    ListingData,
+    ListingVariables
+  >(LISTING, {
+    variables: {
+      id: match.params.id,
+      reservationsPage,
+      limit: PAGE_LIMIT,
+    },
+  });
+
+  const clearReservationData = () => {
+    setModalVisible(false);
+    setCheckInDate(null);
+    setCheckOutDate(null);
+  };
+
+  const handleListingRefetch = async () => {
+    await refetch();
+  };
+
   if (loading) {
     return (
       <Content className="listings">
@@ -76,7 +91,7 @@ export const Listing = ({
       </Content>
     );
   }
-  const listingCreateBookingElement = listing ? (
+  const ListingCreateReservationElement = listing ? (
     <ListingCreateReservation
       viewer={viewer}
       host={listing.host}
@@ -93,11 +108,14 @@ export const Listing = ({
   const listingCreateReservationModalElement =
     listing && checkInDate && checkOutDate ? (
       <ListingCreateReservationModal
+        id={listing.id}
         price={listing.price}
         modalVisible={modalVisible}
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
         setModalVisible={setModalVisible}
+        clearReservationData={clearReservationData}
+        handleListingRefetch={handleListingRefetch}
       />
     ) : null;
 
@@ -109,7 +127,7 @@ export const Listing = ({
           {listingReservationsElement}
         </Col>
         <Col xs={24} lg={10}>
-          {listingCreateBookingElement}
+          {ListingCreateReservationElement}
         </Col>
       </Row>
       {listingCreateReservationModalElement}

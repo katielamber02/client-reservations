@@ -1,22 +1,22 @@
 import React from "react";
 import { Button, Card, DatePicker, Divider, Typography } from "antd";
 import moment, { Moment } from "moment";
+import { Listing as ListingData } from "../../../../lib/graphql/queries/Listing/__generated__/Listing";
 import { displayErrorMessage, formatListingPrice } from "../../../../lib/utils";
 import { Viewer } from "../../../../lib/types";
-import { Listing as ListingData } from "../../../../lib/graphql/queries/Listing/__generated__/Listing";
 import { ReservationsIndex } from "./types";
 
-const { Paragraph, Title, Text } = Typography;
+const { Paragraph, Text, Title } = Typography;
 
 interface Props {
   viewer: Viewer;
   host: ListingData["listing"]["host"];
   price: number;
   reservationsIndex: ListingData["listing"]["reservationsIndex"];
-  checkInDate: Moment | null;
-  checkOutDate: Moment | null;
-  setCheckInDate: (checkInDate: Moment | null) => void;
-  setCheckOutDate: (checkOutDate: Moment | null) => void;
+  checkInDate: Moment | null | undefined;
+  checkOutDate: Moment | null | undefined;
+  setCheckInDate: (checkInDate: Moment | null | undefined) => void;
+  setCheckOutDate: (checkOutDate: Moment | null | undefined) => void;
   setModalVisible: (modalVisible: boolean) => void;
 }
 
@@ -46,6 +46,7 @@ export const ListingCreateReservation = ({
       return false;
     }
   };
+
   const disabledDate = (currentDate?: Moment) => {
     if (currentDate) {
       const dateIsBeforeEndOfDay = currentDate.isBefore(moment().endOf("day"));
@@ -56,13 +57,16 @@ export const ListingCreateReservation = ({
     }
   };
 
-  const verifyAndSetCheckOutDate = (selectedCheckOutDate: Moment | null) => {
+  const verifyAndSetCheckOutDate = (
+    selectedCheckOutDate: Moment | null | undefined
+  ) => {
     if (checkInDate && selectedCheckOutDate) {
       if (moment(selectedCheckOutDate).isBefore(checkInDate, "days")) {
         return displayErrorMessage(
           `You can't book date of check out to be prior to check in!`
         );
       }
+
       let dateCursor = checkInDate;
 
       while (moment(dateCursor).isBefore(selectedCheckOutDate, "days")) {
@@ -88,13 +92,11 @@ export const ListingCreateReservation = ({
   };
 
   const viewerIsHost = viewer.id === host.id;
-  // const checkInInputDisabled = !viewer.id || viewerIsHost || host.hasWallet; // TO UNCOMMENT
-  const checkInInputDisabled = !viewer.id;
+  const checkInInputDisabled = !viewer.id || viewerIsHost || !host.hasWallet;
   const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
-  const buttonDisabled = !checkInDate || !checkOutDate;
+  const buttonDisabled = checkOutInputDisabled || !checkInDate || !checkOutDate;
 
   let buttonMessage = "You won't be charged yet";
-
   if (!viewer.id) {
     buttonMessage = "You have to be signed in to book a listing!";
   } else if (viewerIsHost) {
@@ -147,7 +149,7 @@ export const ListingCreateReservation = ({
           className="listing-booking__card-cta"
           onClick={() => setModalVisible(true)}
         >
-          To make reservation!
+          Request to book!
         </Button>
         <Text type="secondary" mark>
           {buttonMessage}
