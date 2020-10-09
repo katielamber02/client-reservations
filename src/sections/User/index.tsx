@@ -12,6 +12,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Col, Layout, Row } from "antd";
 import { UserProfile, UserListings, UserReservations } from "./components";
 import { PageSkeleton, ErrorBanner } from "../../lib/components";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 interface MatchParams {
   id: string;
@@ -41,8 +42,12 @@ export const User = ({
         listingsPage,
         limit: PAGE_LIMIT,
       },
+      fetchPolicy: "cache-and-network",
     }
   );
+
+  useScrollToTop();
+
   const handleUserRefetch = async () => {
     await refetch();
   };

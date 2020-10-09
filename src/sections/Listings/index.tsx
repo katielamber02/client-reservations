@@ -14,6 +14,7 @@ import {
   ListingsPagination,
   ListingsSkeleton,
 } from "./components";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 interface MatchParams {
   location: string;
@@ -40,6 +41,9 @@ export const Listings = ({ match }: RouteComponentProps<MatchParams>) => {
       },
     }
   );
+
+  useScrollToTop();
+
   useEffect(() => {
     setPage(1);
     locationRef.current = match.params.location;

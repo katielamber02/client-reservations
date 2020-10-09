@@ -30,6 +30,7 @@ import {
   HostListingVariables,
 } from "../../lib/graphql/mutations/HostListing/__generated__/HostListing";
 import { useMutation } from "@apollo/react-hooks";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 const { Content } = Layout;
 const { Text, Title } = Typography;
@@ -86,6 +87,8 @@ export const Host = ({ viewer }: Props) => {
       );
     },
   });
+
+  useScrollToTop();
 
   const handleImageUpload = (info: UploadChangeParam) => {
     const { file } = info;

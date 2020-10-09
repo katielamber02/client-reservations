@@ -17,6 +17,7 @@ import {
 } from "../../lib/graphql/queries/Listings/__generated__/Listings";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { LISTINGS } from "../../lib/graphql/queries/Listings";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
@@ -33,8 +34,11 @@ export const Home = ({ history }: RouteComponentProps) => {
         limit: PAGE_LIMIT,
         page: PAGE_NUMBER,
       },
+      fetchPolicy: "cache-and-network",
     }
   );
+
+  useScrollToTop();
 
   console.log("istings data", data);
   const onSearch = (value: string) => {

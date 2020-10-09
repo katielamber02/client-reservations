@@ -16,6 +16,7 @@ import {
 } from "./components";
 import { Moment } from "moment";
 import { Viewer } from "../../lib/types";
+import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
 const PAGE_LIMIT = 3;
 const { Content } = Layout;
@@ -49,6 +50,8 @@ export const Listing = ({
       limit: PAGE_LIMIT,
     },
   });
+
+  useScrollToTop();
 
   const clearReservationData = () => {
     setModalVisible(false);
