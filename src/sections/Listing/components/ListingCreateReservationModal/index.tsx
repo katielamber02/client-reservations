@@ -113,7 +113,7 @@ export const ListingCreateReservationModal = ({
       <div className="listing-booking-modal">
         <div className="listing-booking-modal__intro">
           <Title className="listing-boooking-modal__intro-title">
-            <KeyOutlined translate="true" />
+            <KeyOutlined translate="yes" />
           </Title>
           <Title level={3} className="listing-boooking-modal__intro-title">
             Book your trip

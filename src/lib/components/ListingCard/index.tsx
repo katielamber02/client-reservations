@@ -47,7 +47,7 @@ export const ListingCard = ({ listing }: Props) => {
           </div>
           <div className="listing-card__dimensions listing-card__dimensions--guests">
             {/* <Icon type="user" style={{ color: iconColor }} /> */}
-            <UserOutlined translate="true" />
+            <UserOutlined translate="yes" />
             <Text>{guests} guests</Text>
           </div>
         </div>

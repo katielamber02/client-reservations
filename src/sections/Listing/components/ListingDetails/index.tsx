@@ -38,7 +38,7 @@ export const ListingDetails = ({ listing }: Props) => {
         >
           <Link to={`/listings/${city}`}>
             {/* <Icon type="environment" style={{ color: iconColor }} /> {city} */}
-            <EnvironmentOutlined translate="true" /> {city}
+            <EnvironmentOutlined translate="yes" /> {city}
           </Link>
           <Divider type="vertical" />
           {address}

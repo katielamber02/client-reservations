@@ -188,11 +188,11 @@ export const Host = ({ viewer }: Props) => {
         >
           <Radio.Group>
             <Radio.Button value={ListingType.APARTMENT}>
-              <BankOutlined translate="true" />
+              <BankOutlined translate="yes" />
               <span> Appartment</span>
             </Radio.Button>
             <Radio.Button value={ListingType.HOUSE}>
-              <HomeOutlined translate="true" />
+              <HomeOutlined translate="yes" />
               <span> House</span>
             </Radio.Button>
           </Radio.Group>
@@ -323,9 +323,9 @@ export const Host = ({ viewer }: Props) => {
               ) : (
                 <div>
                   {imageLoading ? (
-                    <LoadingOutlined translate="true" />
+                    <LoadingOutlined translate="yes" />
                   ) : (
-                    <PlusOutlined translate="true" />
+                    <PlusOutlined translate="yes" />
                   )}
 
                   <div className="ant-upload-text">Upload</div>
