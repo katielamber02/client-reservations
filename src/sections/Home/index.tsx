@@ -6,12 +6,12 @@ import {
 } from "./components";
 import { Layout, Typography, Col, Row } from "antd";
 import mapBackground from "./assets/map-background.jpg";
-import {  Link ,useHistory} from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { displayErrorMessage } from "../../lib/utils";
 import sanFransiscoImage from "./assets/san-francisco.jpg";
 import cancunImage from "./assets/cancun.jpg";
-import { useQuery} from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import {
   Listings as ListingsData,
   ListingsVariables,
@@ -27,8 +27,8 @@ const PAGE_LIMIT = 4;
 const PAGE_NUMBER = 1;
 
 // export const Home = ({ history }: RouteComponentProps) => {
-  export const Home = () => {
- 
+export const Home = () => {
+
   const { loading, data } = useQuery<ListingsData, ListingsVariables>(
     LISTINGS,
     {
@@ -40,7 +40,7 @@ const PAGE_NUMBER = 1;
       fetchPolicy: "cache-and-network",
     }
   );
-  const history=useHistory()
+  const history = useHistory()
   useScrollToTop();
 
   // console.log("listings data", data);
@@ -55,16 +55,11 @@ const PAGE_NUMBER = 1;
   };
   const renderListingsSection = () => {
     if (loading) {
-      return <HomeListingsSkeleton />;
+      return <HomeListingsSkeleton title="Premium Listings - Loading" />;
     }
 
     if (data) {
-      return (
-        <HomeListings
-          title="Premium Listings"
-          listings={data.listings.result}
-        />
-      );
+      return <HomeListings title="Premium Listings" listings={data.listings.result} />;
     }
 
     return null;
