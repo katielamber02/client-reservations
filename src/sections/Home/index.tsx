@@ -6,7 +6,7 @@ import {
 } from "./components";
 import { Layout, Typography, Col, Row } from "antd";
 import mapBackground from "./assets/map-background.jpg";
-import { RouteComponentProps, Link } from "react-router-dom";
+import {  Link ,useHistory} from "react-router-dom";
 
 import { displayErrorMessage } from "../../lib/utils";
 import sanFransiscoImage from "./assets/san-francisco.jpg";
@@ -20,17 +20,15 @@ import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { LISTINGS } from "../../lib/graphql/queries/Listings";
 import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
-
-
-
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
 const PAGE_LIMIT = 4;
 const PAGE_NUMBER = 1;
 
-export const Home = ({ history}:RouteComponentProps) => {
-
+// export const Home = ({ history }: RouteComponentProps) => {
+  export const Home = () => {
+ 
   const { loading, data } = useQuery<ListingsData, ListingsVariables>(
     LISTINGS,
     {
@@ -42,7 +40,7 @@ export const Home = ({ history}:RouteComponentProps) => {
       fetchPolicy: "cache-and-network",
     }
   );
-
+  const history=useHistory()
   useScrollToTop();
 
   console.log("istings data", data);
@@ -124,4 +122,5 @@ export const Home = ({ history}:RouteComponentProps) => {
       </div>
     </Content>
   );
-};
+}
+
