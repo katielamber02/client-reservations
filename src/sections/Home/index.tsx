@@ -43,7 +43,7 @@ const PAGE_NUMBER = 1;
   const history=useHistory()
   useScrollToTop();
 
-  console.log("istings data", data);
+  // console.log("listings data", data);
   const onSearch = (value: string) => {
     const trimmedValue = value.trim();
 
