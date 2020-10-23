@@ -3,7 +3,7 @@ import { Card, Layout, Typography, Spin } from "antd";
 import googleLogo from "./assets/google_logo.jpg";
 import { Viewer } from "../../lib/types";
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { ErrorBanner } from "../../lib/components";
 import {
   displaySuccessNotification,
@@ -19,8 +19,12 @@ import {
 import { AuthUrl as AuthUrlData } from "../../lib/graphql/queries/AuthUrl/__generated__/AuthUrl";
 import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
+
+
 const { Content } = Layout;
 const { Text, Title } = Typography;
+
+
 
 interface Props {
   setViewer: (viewer: Viewer) => void;
@@ -42,10 +46,13 @@ export const Login = ({ setViewer }: Props) => {
   });
   const logInRef = useRef(logIn);
 
+  const location = useLocation()
   useScrollToTop();
 
   useEffect(() => {
-    const code = new URL(window.location.href).searchParams.get("code");
+    // const code = new URL(window.location.href).searchParams.get("code"); // BEFORE
+    const searchParams = new URLSearchParams(location.search) // AFTER -for testing purpose
+    const code = searchParams.get("code")
     if (code) {
       logInRef.current({
         variables: {
@@ -53,15 +60,20 @@ export const Login = ({ setViewer }: Props) => {
         },
       });
     }
-  }, []);
+  }, [location.search]);
 
   const handleAuthorize = async () => {
     try {
       const { data } = await client.query<AuthUrlData>({
         query: AUTH_URL,
       });
-      window.location.href = data.authUrl;
+      if (!data) {
+        throw new Error("Unable to authenticate")
+      }
+
+      //window.location.href = data.authUrl; // BEFORE
       // http://localhost:3000/login?code=4%2F4gH7A94gVv2guhqOY5lyvUu9rRrP52BqyN1EMVMr4D85QfHjSRi5PoCKZZrVjLc9hWAgZwGw5PkDLrsm2_U7eto&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=consent#
+      window.location.assign(data.authUrl) // AFTER -for testing purpose
     } catch {
       displayErrorMessage(
         "Sorry! We weren't able to log you in. Please try again later!"

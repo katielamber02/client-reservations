@@ -20,6 +20,7 @@ import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { LISTINGS } from "../../lib/graphql/queries/Listings";
 import { useScrollToTop } from "../../lib/hooks/useScrollToTop";
 
+
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
