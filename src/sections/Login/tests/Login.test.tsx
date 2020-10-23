@@ -184,37 +184,48 @@ describe("Login", () => {
             });
 
             it("does not redirect the user to their user page and displays an error message when the mutation is unsuccessful", async () => {
-                //     const logInMock = {
-                //         request: {
-                //             query: LOG_IN,
-                //             variables: {
-                //                 input: {
-                //                     code: "1234",
-                //                 },
-                //             },
-                //         },
-                //         errors: [new GraphQLError("Something went wrong")],
-                //     };
+                const logInMock = {
+                    request: {
+                        query: LOG_IN,
+                        variables: {
+                            input: {
+                                code: "1234",
+                            },
+                        },
+                    },
+                    result: {
+                        data: {
+                            logIn: {
+                                id: "111",
+                                token: "4321",
+                                avatar: "image.png",
+                                hasWallet: false,
+                                didRequest: true,
+                            },
+                        },
+                    },
+                    errors: [new GraphQLError("Something went wrong")],
+                };
 
-                //     const history = createMemoryHistory({
-                //         initialEntries: ["/login?code=1234"],
-                //     });
-                //     const { queryByText } = render(
-                //         <MockedProvider mocks={[logInMock]} addTypename={false}>
-                //             <Router history={history}>
-                //                 <Route path="/login">
-                //                     <Login {...defaultProps} />
-                //                 </Route>
-                //             </Router>
-                //         </MockedProvider>
-                //     );
+                const history = createMemoryHistory({
+                    initialEntries: ["/login?code=1234"],
+                });
+                const { queryByText } = render(
+                    <MockedProvider mocks={[logInMock]} addTypename={false}>
+                        <Router history={history}>
+                            <Route path="/login">
+                                <Login {...defaultProps} />
+                            </Route>
+                        </Router>
+                    </MockedProvider>
+                );
 
-                //     await waitFor(() => {
-                //         expect(history.location.pathname).not.toBe("/user/111");
-                //         expect(
-                //             queryByText("Sorry! We weren't able to log you in. Please try again later!")
-                //         ).not.toBeNull();
-                //     });
+                await waitFor(() => {
+                    expect(history.location.pathname).not.toBe("/user/111");
+                    expect(
+                        queryByText("Sorry! We weren't able to log you in. Please try again later!")
+                    ).not.toBeNull();
+                });
             });
         });
     });
